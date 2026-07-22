@@ -1,0 +1,33 @@
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+hello-oke-stack.zip
+
+# Kubernetes access
+kubeconfig*
+*.kubeconfig
+
+# Keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.retry
