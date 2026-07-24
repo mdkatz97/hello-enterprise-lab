@@ -21,9 +21,6 @@ module "oke" {
   # explicit bootstrap authority in the next phase.
   create_iam_resources = false
 
-  depends_on = [
-    oci_identity_policy.oke_cluster_network
-  ]
 
   create_vcn    = true
   vcn_name      = "hello-lab-vcn"
