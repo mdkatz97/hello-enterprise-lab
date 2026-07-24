@@ -19,7 +19,11 @@ module "oke" {
   # The official module creates the OKE service policies and dynamic
   # groups needed by the cluster. The Resource Manager stack is given
   # explicit bootstrap authority in the next phase.
-  create_iam_resources = true
+  create_iam_resources = false
+
+  depends_on = [
+    oci_identity_policy.oke_cluster_network
+  ]
 
   create_vcn    = true
   vcn_name      = "hello-lab-vcn"
@@ -99,4 +103,14 @@ module "oke" {
   allow_short_container_image_names = false
 
   output_detail = false
+}
+resource "oci_identity_policy" "oke_cluster_network" {
+  provider       = oci.home
+  compartment_id = var.compartment_ocid
+  name           = "oke-cluster-hello-lab-network"
+  description    = "Allow the OKE cluster principal to manage NSGs in the lab compartment."
+
+  statements = [
+    "Allow any-user to manage network-security-groups in compartment id ${var.compartment_ocid} where request.principal.type = 'cluster'"
+  ]
 }
