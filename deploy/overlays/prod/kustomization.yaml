@@ -9,4 +9,4 @@ resources:
 images:
   - name: ghcr.io/example/hello-enterprise
     newName: ghcr.io/mdkatz97/hello-enterprise
-    digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+    digest: sha256:5416bff0282416793a5603f2ca02f1d1cfefe4810dd50f8a02201dc59045076b
