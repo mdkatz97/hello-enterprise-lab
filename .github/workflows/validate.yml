@@ -1,0 +1,67 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - app/**
+      - infra/**
+      - platform/**
+      - deploy/**
+      - .github/workflows/validate.yml
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Terraform 1.5.7
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+          terraform_wrapper: false
+
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive infra/oke
+
+      - name: Initialize without local state
+        run: terraform -chdir=infra/oke init -backend=false
+
+      - name: Validate Terraform
+        run: terraform -chdir=infra/oke validate
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Build application image
+        run: docker build --tag hello-ci:${GITHUB_SHA} ./app
+
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Render namespaces
+        run: kubectl kustomize platform/namespaces > /tmp/namespaces.yaml
+
+      - name: Render production application
+        run: kubectl kustomize deploy/overlays/prod > /tmp/application.yaml
+
+      - name: Confirm rendered files are nonempty
+        run: |
+          test -s /tmp/namespaces.yaml
+          test -s /tmp/application.yaml
