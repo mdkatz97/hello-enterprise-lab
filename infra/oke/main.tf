@@ -7,10 +7,10 @@ module "oke" {
     oci.home = oci.home
   }
 
-  tenancy_ocid     = var.tenancy_ocid
-  compartment_ocid = var.compartment_ocid
-  home_region      = var.home_region
-  region           = var.region
+  tenancy_ocid   = var.tenancy_ocid
+  compartment_id = var.compartment_ocid
+  home_region    = var.home_region
+  region         = var.region
 
   state_id = "hello-lab"
 
@@ -21,9 +21,10 @@ module "oke" {
   # explicit bootstrap authority in the next phase.
   create_iam_resources = true
 
-  create_vcn = true
-  vcn_name   = "hello-lab-vcn"
-  vcn_cidrs  = ["10.20.0.0/16"]
+  create_vcn    = true
+  vcn_name      = "hello-lab-vcn"
+  vcn_dns_label = "hellolab"
+  vcn_cidrs     = ["10.20.0.0/16"]
 
   subnets = {
     bastion = {
