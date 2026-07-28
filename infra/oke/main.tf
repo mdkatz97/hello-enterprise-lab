@@ -16,9 +16,8 @@ module "oke" {
 
   ssh_public_key = var.ssh_public_key
 
-  # The official module creates the OKE service policies and dynamic
-  # groups needed by the cluster. The Resource Manager stack is given
-  # explicit bootstrap authority in the next phase.
+# Disable module-generated IAM resources. The required scoped
+# OKE cluster networking policy is defined explicitly below.
   create_iam_resources = false
 
 
